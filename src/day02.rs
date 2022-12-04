@@ -14,6 +14,39 @@ pub mod day02 {
         return p;
     }
 
+    fn to_response(ref mut play: Split<&str>) -> Play {
+        let theirs = play.next().unwrap();
+        let p = Play {
+            theirs: String::from(theirs),
+            yours: map_response(theirs, play.next().unwrap()),
+        };
+        return p;
+    }
+
+    fn map_response(theirs: &str, yours: &str) -> &'static str {
+        return match yours {
+            "X" => match theirs {
+                "A" => "C",
+                "B" => "A",
+                "C" => "B",
+                _ => panic!("Not a valid value")
+            },
+            "Y" =>  match theirs {
+                "A" => "A",
+                "B" => "B",
+                "C" => "C",
+                _ => panic!("Not a valid value")
+            },
+            "Z" =>  match theirs {
+                "A" => "B",
+                "B" => "C",
+                "C" => "A",
+                _ => panic!("Not a valid value")
+            },
+            _ => panic!("Not a valid value")
+        }
+    }
+
     fn map_yours(yours: &str) -> &'static str {
         return match yours {
             "X" => "A",
@@ -61,5 +94,18 @@ pub mod day02 {
             .sum();
 
         println!("part1 = {}", lines);
+    }
+
+    pub fn part2() {
+        println!("----- Day 02 Part 2 ------");
+
+        let lines: u64 = include_str!("inputs/day02.txt")
+            .lines()
+            .map(|play| play.split(" "))
+            .map(|play| to_response(play))
+            .map(|play| play_score(&play) + win_score(&play))
+            .sum();
+
+        println!("part2 = {}", lines);
     }
 }
